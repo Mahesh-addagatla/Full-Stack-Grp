@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/chat.css" />
-    <title>Chat</title>
+    <link rel="stylesheet" href="/css/chat.css" />
+    <base href="/" />
+    <title>Club Chat</title>
   </head>
   <body>
     <%- include("partials/header") -%>
     <h1 class="chat-heading">
-      Welcome to City Connect -
-      <span class="chat-heading-cityName"> <%= user.location %></span>
+      Welcome to Club Connect -
+      <span class="chat-heading-cityName"> <%= club.ClubName %></span>
     </h1>
     <div style="display: flex; justify-content: center">
       <p class="chat-heading-description" style="font-weight: 300">
@@ -18,8 +19,8 @@
         <span class="chat-heading-description-highlight"
           >connect, share, and chat</span
         >
-        with fellow residents in your city. Whether you want to discuss
-        <span class="chat-heading-description-highlight"> local events</span>,
+        with fellow club members. Whether you want to discuss
+        <span class="chat-heading-description-highlight"> club events</span>,
         ask for
         <span class="chat-heading-description-highlight"> recommendations</span
         >, or just have a
@@ -42,8 +43,7 @@
     <div id="chat-box" class="chat-box" style="margin-bottom: 15vh">
       <!-- Dynamic messages will be appended here -->
     </div>
-
-    <form id="chat-form" action="/chat" method="POST">
+    <form id="chat-form" action="/clubs/<%= club.id %>/chat" method="POST">
       <input
         type="text"
         name="message"
@@ -61,6 +61,8 @@
 
     <script>
       // Firebase configuration
+      console.log("Club ID:", "<%= club.id %>");
+
       const firebaseConfig = {
         apiKey: "AIzaSyDINlS7PqxjzKuarFE5Rr7_jQ84DLwjCOM",
         authDomain: "node401app.firebaseapp.com",
@@ -78,31 +80,34 @@
 
       // Fetch and display chat messages
       const chatBox = document.getElementById("chat-box");
-      const userLocation = "<%= user.location %>";
+      const clubId = "<%= club.id %>";
+      const userLocation = "<%= user.location %>"; // Renamed from `location` to `userLocation`
 
-      db.ref(`Cities/${userLocation}/Chats`).on("child_added", (snapshot) => {
-        const messageData = snapshot.val();
-        const timestamp = new Date(messageData.timestamp);
-        const timeString = timestamp.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        const dateString = timestamp.toLocaleDateString();
+      db.ref(`Cities/${userLocation}/Clubs/${clubId}/Chat`).on(
+        "child_added",
+        (snapshot) => {
+          const messageData = snapshot.val();
+          const timestamp = new Date(messageData.timestamp);
+          const timeString = timestamp.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          const dateString = timestamp.toLocaleDateString();
 
-        // Check if the message is sent by the current user
-        const isSentByUser = messageData.userName === "<%= user.name %>";
+          // Check if the message is sent by the current user
+          const isSentByUser = messageData.userName === "<%= user.name %>";
 
-        // Apply different classes and avatar image based on the sender
-        const messageClass = isSentByUser ? "sent" : "received";
-        const avatarClass = isSentByUser ? "avatarSent" : "avatarReceived";
-        const userClass = isSentByUser ? "sentUser" : "receivedUser";
-        const timeClass = isSentByUser ? "sentTime" : "receivedTime";
+          // Apply different classes and avatar image based on the sender
+          const messageClass = isSentByUser ? "sent" : "received";
+          const avatarClass = isSentByUser ? "avatarSent" : "avatarReceived";
+          const userClass = isSentByUser ? "sentUser" : "receivedUser";
+          const timeClass = isSentByUser ? "sentTime" : "receivedTime";
 
-        const avatarImage = isSentByUser
-          ? "images/User-profile.png"
-          : "images/Other-profile.png";
+          const avatarImage = isSentByUser
+            ? "images/User-profile.png"
+            : "images/Other-profile.png";
 
-        const messageHTML = `
+          const messageHTML = `
     <div class="message-container ${messageClass}">
       <div class="user-info ${messageClass}">
         <div class="avatar ${avatarClass}">
@@ -118,9 +123,10 @@
     </div>
   `;
 
-        chatBox.innerHTML += messageHTML;
-        chatBox.scrollTop = chatBox.scrollHeight;
-      });
+          chatBox.innerHTML += messageHTML;
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      );
 
       // Submit chat message form via AJAX
       document
@@ -132,7 +138,7 @@
           const message = messageInput.value;
 
           try {
-            const response = await fetch("/chat", {
+            const response = await fetch(`/clubs/${clubId}/chat`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ message }),

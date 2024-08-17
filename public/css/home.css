@@ -4,61 +4,21 @@ body {
   padding: 0;
   margin: 0;
 }
-.container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: auto;
-  height: 10vh;
-  padding: 10px 20px;
-  border-bottom: 2px solid black;
-}
 
-.logo {
-  margin: 0;
-  color: rgb(51, 57, 137);
-  font-size: 1.5rem;
-  font-family: "Play", sans-serif;
-}
-
-.nav-links {
-  list-style-type: none;
-  margin: 0px 20px 0px 20px;
-  padding: 0;
-}
-
-.nav-links li {
-  display: inline-block;
-  margin-right: 20px;
-}
-
-.nav-links li:last-child {
-  margin-right: 0;
-}
-
-.nav-links li a {
-  color: rgb(51, 57, 137);
-  font-size: 1.5rem;
-  text-decoration: none;
-  font-weight: bolder;
-  transition: color 0.3s ease;
-  font-family: "Play", sans-serif;
-}
-
-.nav-links li a:hover {
-  color: #ffc107;
-}
 #vanta {
-  height: 90vh;
+  height: 100vh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 .first-section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  margin-top: 10vh;
 }
 .first-section-logo {
   height: 100px;
@@ -175,47 +135,7 @@ body {
 }
 
 /* Firefox */
-html,
-body {
-  scrollbar-width: thin; /* Makes the scrollbar thin */
-  scrollbar-color: #63d3d8 transparent; /* Fallback solid color for Firefox */
-}
 
-/* Webkit-based browsers */
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  width: 15px; /* Scrollbar width */
-}
-
-html::-webkit-scrollbar-track,
-body::-webkit-scrollbar-track {
-  background-color: rgba(255, 255, 255, 0.1); /* Track color */
-  border-radius: 2%; /* Track border-radius */
-}
-
-html::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb {
-  background: linear-gradient(45deg, #00aeff, #a68eff); /* Gradient for thumb */
-  border-radius: 20px; /* Thumb border-radius */
-}
-
-html::-webkit-scrollbar-thumb:hover,
-body::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    45deg,
-    #00aeff,
-    #8f5eff
-  ); /* Slightly darker gradient on hover */
-}
-
-html::-webkit-scrollbar-thumb:active,
-body::-webkit-scrollbar-thumb:active {
-  background: linear-gradient(
-    45deg,
-    #00aeff,
-    #6f3eff
-  ); /* Even darker on active */
-}
 .second-section-icons {
   display: flex;
   align-items: center;
@@ -669,4 +589,22 @@ body {
 .review-stars {
   width: 15px;
   display: flex;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  scrollbar-width: none;
+  scrollbar-color: #63d3d8 transparent;
+}
+
+#progressbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 15px;
+  border-radius: 10px;
+  background: linear-gradient(to top, #222831, #393e46, #00adb5, #eeeeee);
 }

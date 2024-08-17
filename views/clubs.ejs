@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clubs</title>
+    <link rel="stylesheet" href="css/clubs.css" />
+  </head>
+  <body>
+    <%- include("partials/header.ejs") -%>
+    <h1 class="clubs-heading">
+      Clubs in <span class="clubs-heading-cityName"> <%= user.location %></span>
+    </h1>
+    <div style="display: flex; justify-content: center">
+      <p class="clubs-heading-description" style="font-weight: 300">
+        Welcome to the clubs section, where you can explore and join a variety
+        of
+        <span class="clubs-heading-description-highlight">local clubs</span>
+        that match your interests. Whether you're looking to
+        <span class="clubs-heading-description-highlight">hone your skills</span
+        >, meet like-minded individuals, or simply
+        <span class="clubs-heading-description-highlight"
+          >enjoy a shared hobby</span
+        >, there’s a club here for you! Each club offers unique activities,
+        gatherings, and opportunities to
+        <span class="clubs-heading-description-highlight"
+          >connect with fellow residents</span
+        >. Dive in, find your passion, and
+        <span class="clubs-heading-description-highlight">get involved</span> in
+        the community today!
+      </p>
+    </div>
+
+    <div class="clubs-container">
+      <% clubs.forEach(club => { %>
+      <div class="clubs-separator">
+        <div class="clubs-image">
+          <img
+            src="<%= club.ClubProfileImage %>"
+            alt="<%= club.ClubName %> Profile"
+            class="club-profile-photo"
+          />
+        </div>
+        <div class="club-card">
+          <h2><%= club.ClubName %></h2>
+          <p>
+            <img src="images/location.svg" alt="" /> <%= club.ClubLocation %>
+          </p>
+          <p>
+            <img src="images/calendar.svg" alt="" /> <%= club.ClubTimings %>
+          </p>
+          <p
+            class="clubs-description"
+            style="
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            "
+          >
+            <%= club.ClubDescription %>
+          </p>
+          <div style="display: flex; justify-content: center">
+            <a href="/clubs/<%= club.id %>">
+              <button class="clubs-more-button">
+                Click here for more details!
+              </button></a
+            >
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <h1 class="clubs-create-header">Wanna Create a Club?</h1>
+
+    <div class="clubs-create">
+      <a href="/createClub">
+        <button class="clubs-create-club-button">Create a club</button></a
+      >
+    </div>
+    <%- include("partials/footer.ejs") -%>
+  </body>
+</html>

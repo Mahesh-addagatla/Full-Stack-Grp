@@ -1,66 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Community Post</title>
-    <link rel="stylesheet" href="/css/postpage.css">
-    <link rel="stylesheet" href="/css/header.css">
-    <link rel="stylesheet" href="/css/footer.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/css/postpage.css" />
+    <link rel="stylesheet" href="/css/header.css" />
+    <link rel="stylesheet" href="/css/footer.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <base href="/" />
+  </head>
+  <body>
     <%- include("partials/header") -%>
 
     <div class="postpage-container">
-        <div class="postpage-header">
-            <h1 class="postpage-title"><%= post.Title %></h1>
-            <p class="postpage-author">By <%= post.AuthorName %> | <%= post.Time %></p>
-        </div>
-        <div class="postpage-image">
-            <% if (post.Image) { %>
-                <img src="<%= post.Image %>" alt="<%= post.Title %> Image" />
-            <% } else { %>
-                <img src="/images/default.jpg" alt="Default Image" />
-            <% } %>
-        </div>
-        <div class="postpage-content">
-            <%= post.Content %>
-        </div>
+      <div class="postpage-header">
+        <h1 class="postpage-title"><%= post.Title %></h1>
+        <p class="postpage-author">
+          By <%= post.AuthorName %> | <%= post.Time %>
+        </p>
+      </div>
+      <div class="postpage-image">
+        <% if (post.Image) { %>
+        <img src="<%= post.Image %>" alt="<%= post.Title %> Image" />
+        <% } else { %>
+        <img src="/images/default.jpg" alt="Default Image" />
+        <% } %>
+      </div>
+      <div class="postpage-content"><%= post.Content %></div>
 
-        <!-- Comment Section -->
-        <div class="comment-section">
-            <form action="/post/<%= post.id %>/NeighbourVoices" method="POST" class="add-voice-form">
-                <div class="input-container">
-                  <i class="fa-regular fa-face-smile" style="color: #00ADB5;"></i>
-                  <input type="text" name="voice" placeholder="Add your voice..." required>
-                </div>
-                <button type="submit" class="publish-btn">Publish</button>
-            </form>
+      <!-- Comment Section -->
+      <div class="comment-section">
+        <form
+          action="/post/<%= post.id %>/NeighbourVoices"
+          method="POST"
+          class="add-voice-form"
+        >
+          <div class="input-container">
+            <i class="fa-regular fa-face-smile" style="color: #00adb5"></i>
+            <input
+              type="text"
+              name="voice"
+              placeholder="Add your voice..."
+              required
+            />
+          </div>
+          <button type="submit" class="publish-btn">Publish</button>
+        </form>
+      </div>
+
+      <!-- Neighbour Voices Section -->
+      <div class="neighbour-voices">
+        <h3>Neighbour Voices</h3>
+        <% if (voices.length === 0) { %>
+        <p>No voices are found.</p>
+        <% } else { %> <% voices.forEach(function(voice) { %>
+        <div class="voice">
+          <div class="voice-avatar">
+            <img src="/images/user.png" alt="User Avatar" />
+          </div>
+          <div class="voice-content">
+            <h4><%= voice.AuthorName %></h4>
+            <p><%= voice.Voice %></p>
+          </div>
         </div>
-        
-        <!-- Neighbour Voices Section -->
-        <div class="neighbour-voices">
-            <h3>Neighbour Voices</h3>
-            <% if (voices.length === 0) { %>
-                <p>No voices are found.</p>
-            <% } else { %>
-                <% voices.forEach(function(voice) { %>
-                    <div class="voice">
-                        <div class="voice-avatar">
-                            <img src="/images/user.png" alt="User Avatar">
-                        </div>
-                        <div class="voice-content">
-                            <h4><%= voice.AuthorName %></h4>
-                            <p><%= voice.Voice %></p>
-                        </div>
-                    </div>
-                <% }); %>
-            <% } %>
-        </div>
+        <% }); %> <% } %>
+      </div>
     </div>
 
     <%- include("partials/footer") -%>
-
-</body>
+  </body>
 </html>

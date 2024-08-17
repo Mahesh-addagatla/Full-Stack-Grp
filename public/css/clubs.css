@@ -1,0 +1,223 @@
+@import url("https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Dongle&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.clubs-heading {
+  font-family: "Poppins", system-ui;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 7vh;
+  text-align: center;
+  color: #222831;
+  margin-bottom: 0;
+}
+.clubs-heading-cityName {
+  color: #00adb5;
+}
+.clubs-heading-description {
+  text-align: center;
+  color: #393e467d;
+  font-size: 2vh;
+  width: 70%;
+  font-weight: 500 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+}
+.clubs-heading-description-highlight {
+  color: #00adb5;
+}
+
+.clubs-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 5vh;
+}
+.clubs-separator {
+  display: flex;
+  background-color: #eee;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin-bottom: 10vh;
+  width: 80%;
+  border-radius: 1.5vw;
+}
+.clubs-image {
+  padding: 1.5vw;
+  background-color: rgba(0, 173, 181, 0.5);
+  border-radius: 1.5vw;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) inset;
+}
+.clubs-image img {
+  width: 16vw;
+  height: 45vh;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 1.5vw;
+  overflow: hidden;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.club-card h2 {
+  font-weight: 700 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+  color: #222831;
+  text-align: center;
+  font-size: 5vh;
+  margin: 3vh 0;
+}
+.club-card p {
+  margin-left: 4vw;
+  font-weight: 500 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+  display: flex;
+  align-items: center;
+  font-size: 3vh;
+}
+.club-card p img {
+  width: 1.5vw;
+  height: auto;
+  margin-right: 1vw;
+}
+.clubs-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* From Uiverse.io by shah1345 */
+.clubs-more-button {
+  display: inline-block;
+  transition: all 0.2s ease-in;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  color: #222831;
+  padding: 0.7em 1.7em;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 0.5em;
+  background: rgba(0, 173, 181, 0.5);
+  border: 1px solid #e8e8e8;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+  font-weight: 500 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+}
+
+.clubs-more-button:active {
+  color: #666;
+  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+}
+
+.clubs-more-button:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.25);
+  top: 100%;
+  width: 140%;
+  height: 180%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.clubs-more-button:after {
+  content: "";
+  position: absolute;
+  left: 55%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.45);
+  top: 180%;
+  width: 160%;
+  height: 190%;
+  background-color: #ffffff; /* Updated to light grey */
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.clubs-more-button:hover {
+  color: #000; /* Darker text color on hover for contrast */
+  border: 1px solid #ffffff; /* Border color matches background */
+}
+
+.clubs-more-button:hover:before {
+  top: -35%;
+  background-color: #ffffff; /* Light grey on hover */
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+.clubs-more-button:hover:after {
+  top: -45%;
+  background-color: #ffffff; /* Light grey on hover */
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+.clubs-create-header {
+  font-weight: 700 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+  color: #393e46;
+  text-align: center;
+  margin-top: 0;
+}
+.clubs-create {
+  display: flex;
+  justify-content: center;
+  margin: 5vh;
+  margin-top: 0;
+}
+/* From Uiverse.io by cssbuttons-io */
+.clubs-create-club-button {
+  position: relative;
+  font-size: 17px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 1em 2.5em;
+  display: inline-block;
+  border-radius: 6em;
+  transition: all 0.2s;
+  border: none;
+  font-family: inherit;
+  font-weight: 500;
+  color: white;
+  background-color: #00adb5;
+  cursor: pointer;
+  font-weight: 400 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+}
+
+.clubs-create-club-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.clubs-create-club-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.clubs-create-club-button::after {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  border-radius: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  transition: all 0.4s;
+}
+
+.clubs-create-club-button::after {
+  background-color: #393e46;
+}
+
+.clubs-create-club-button:hover::after {
+  transform: scaleX(1.4) scaleY(1.6);
+  opacity: 0;
+}

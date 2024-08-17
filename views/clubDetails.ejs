@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= club.ClubName %> Details</title>
+    <link rel="stylesheet" href="/css/clubDetails.css" />
+    <base href="/" />
+  </head>
+  <body>
+    <%- include("partials/header.ejs") -%> <% if (club.ClubBanner) { %>
+    <div class="clubDetails-banner">
+      <img src="<%= club.ClubBanner %>" alt="Club Banner" width="400" />
+    </div>
+    <% } %>
+
+    <div class="clubDetails-profile-photo">
+      <% if (club.ClubProfileImage) { %>
+      <img
+        src="<%= club.ClubProfileImage %>"
+        alt="Club Profile Image"
+        width="200"
+      />
+      <% } %>
+    </div>
+
+    <div class="clubDetails-content">
+      <h1><%= club.ClubName %></h1>
+
+      <div class="clubDetails-member-count">
+        <% if (club.MembersCount && club.MembersCount > 0) { %>
+        <p style="margin-left: 0">
+          <span style="color: #00adb5; font-size: 3vh; font-weight: 600">
+            <%= club.MembersCount %>
+          </span>
+          Members
+        </p>
+        <% } else { %>
+        <p>No members yet.</p>
+        <% } %>
+      </div>
+
+      <div class="clubDetails-join-container">
+        <% if (hasJoined) { %>
+        <button type="button" class="clubDetails-joined-button" disabled>
+          Joined
+        </button>
+        <% } else { %>
+        <form action="/clubs/join/<%= club.id %>" method="post">
+          <button type="submit" class="clubDetails-join-button">
+            Join Club
+          </button>
+        </form>
+        <% } %>
+      </div>
+
+      <hr
+        style="
+          width: 90%;
+          border: 1px solid rgba(57, 62, 70, 0.5);
+          margin-top: 4vh;
+        "
+      />
+
+      <p><strong>Location:</strong> <%= club.ClubLocation %></p>
+      <p><strong>Timings:</strong> <%= club.ClubTimings %></p>
+      <p style="font-size: 2.7vh">
+        <strong style="font-size: 3vh">Description:</strong> <%=
+        club.ClubDescription %>
+      </p>
+    </div>
+
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        margin: 0;
+      "
+    >
+      <div class="clubDetails-chat-container">
+        <h1>
+          Have an announcement/query or just wanna casually talk with club
+          members?
+        </h1>
+        <div class="clubDetails-join-container">
+          <% if (hasJoined) { %>
+          <a href="/clubs/<%= club.id %>/chat">
+            <button class="clubDetails-chat-button">Chat Now</button>
+          </a>
+
+          <% } else { %>
+          <button
+            class="clubDetails-chat-button"
+            disabled
+            title="Join the club to enable chat"
+          >
+            Chat Now
+          </button>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <%- include("partials/footer.ejs") -%>
+  </body>
+</html>

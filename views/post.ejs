@@ -19,25 +19,13 @@
         <!-- Ensure the key matches your Firestore field -->
         <div class="post-image">
           <% if (post.Image) { %>
+          <!-- Ensure the key matches your Firestore field -->
           <img src="<%= post.Image %>" alt="<%= post.Title %> Image" />
-          <% } else { %> <% let defaultImage; switch (post.Category) { case
-          'General Discussion': defaultImage = '/images/general-discussion.jpg';
-          break; case 'Announcements': defaultImage =
-          '/images/announcement.jpg'; break; case 'Government Announcements':
-          defaultImage = '/images/government-announcement.jpg'; break; case
-          'Review': defaultImage = '/images/review.jpg'; break; default:
-          defaultImage = '/images/default.jpg'; } %>
-          <img src="<%= defaultImage %>" alt="Default Image" />
+          <% } else { %>
+          <img src="/images/default.jpg" alt="Default Image" />
           <% } %>
         </div>
-        <div
-          style="
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-right: 0.5rem;
-          "
-        >
+        <div style="display: flex; align-items: center; justify-content:space-between; padding-right:0.5rem;">
           <div class="icon-box">
             <p class="span"><%= post.Category %></p>
           </div>
@@ -45,25 +33,21 @@
           <div class="dropdown">
             <button class="dropbtn">⋮</button>
             <div class="dropdown-content">
-              <a href="/edit/<%= post.id %>"> Edit </a>
-              <a
-                href="/delete/<%= post.id %>"
-                onclick="return confirm('Are you sure you want to delete this post?');"
-              >
+              <a href="/edit/<%= post.id %>">
+                 Edit
+              </a>
+              <a href="/delete/<%= post.id %>" onclick="return confirm('Are you sure you want to delete this post?');">
                 Delete
               </a>
-              <a
-                href="#"
-                onclick="return copyClipboard('<%= post.id %>');"
-                id="share-<%= post.id %>"
-              >
+              <a href="#" onclick="return copyClipboard('<%= post.id %>');" id="share-<%= post.id %>">
                 Share
-              </a>
+              </a>             
+              
             </div>
           </div>
           <% } %>
         </div>
-
+        
         <div class="post-content">
           <h2 class="post-h3"><%= post.Title %></h2>
           <p class="post-p"><%- post.Content %></p>
@@ -71,46 +55,49 @@
           <a href="/post/<%= post.id %>">Read More</a>
         </div>
         <div style="margin-bottom: 4vh"></div>
+        
       </div>
       <% }) %> <% } %>
     </div>
 
     <script>
-      document.addEventListener("click", function (event) {
-        const dropdowns = document.querySelectorAll(".dropdown-content");
-        dropdowns.forEach((dropdown) => {
-          if (!event.target.matches(".dropbtn")) {
-            dropdown.style.display = "none";
+      document.addEventListener('click', function(event) {
+        const dropdowns = document.querySelectorAll('.dropdown-content');
+        dropdowns.forEach(dropdown => {
+          if (!event.target.matches('.dropbtn')) {
+            dropdown.style.display = 'none';
           }
         });
-
-        if (event.target.matches(".dropbtn")) {
+      
+        if (event.target.matches('.dropbtn')) {
           const dropdownContent = event.target.nextElementSibling;
-          dropdownContent.style.display =
-            dropdownContent.style.display === "block" ? "none" : "block";
+          dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
         }
       });
       function copyClipboard(postId) {
         // Construct the full URL to be shared
         var fullUrl = window.location.origin + "/post/" + postId;
-
+      
         // Create a temporary input element to hold the URL
         var tempInput = document.createElement("input");
         tempInput.value = fullUrl;
-
+      
         // Append the temporary input to the body, select the text, and copy it
         document.body.appendChild(tempInput);
         tempInput.select();
         tempInput.setSelectionRange(0, 99999); // For mobile devices
         navigator.clipboard.writeText(tempInput.value);
-
+      
         // Remove the temporary input from the body
         document.body.removeChild(tempInput);
-
+      
         // Optional: Alert the user that the link was copied
         alert("Post URL copied to clipboard!");
         return false; // Prevent the default link action
       }
+      
+      
+      
     </script>
     <%- include("partials/footer") -%>
   </body>

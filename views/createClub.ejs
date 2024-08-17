@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Club</title>
+    <link rel="stylesheet" href="/css/createclub.css" />
+    <base href="/" />
+  </head>
+  <body>
+    <%- include("partials/header") -%>
+    <div class="createclub-outer-container">
+      <h1>
+        Create your Club in
+        <span style="color: #00bfa5"><%= user.location %></span>
+      </h1>
+
+      <!-- Club Information Form -->
+      <div class="club-info">
+        <form action="/createClub" method="POST" enctype="multipart/form-data">
+          <div class="banner-container">
+            <!-- Club Banner -->
+            <label for="banner-upload" class="upload-banner-label">
+              <input
+                type="file"
+                id="banner-upload"
+                name="clubBanner"
+                accept="image/*"
+                class="upload-banner-input"
+              />
+              <img
+                src="/images/placeholder-banner.jpg"
+                alt="Club Banner"
+                id="banner-preview"
+                class="club-banner"
+              />
+            </label>
+            <!-- Club Profile Image -->
+            <div class="profile-image-container">
+              <label for="profile-upload" class="upload-profile-label">
+                <input
+                  type="file"
+                  id="profile-upload"
+                  name="clubProfileImage"
+                  class="upload-profile-input"
+                  accept="image/*"
+                  required
+                />
+                <img
+                  src="/images/placeholder-profile.png"
+                  alt="Club Profile"
+                  id="profile-preview"
+                  class="club-profile-image"
+                />
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="club-name">Club Name</label>
+            <input
+              type="text"
+              id="clubName"
+              name="clubName"
+              placeholder="Enter club name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="club-description">Club Description</label>
+            <textarea
+              id="clubDescription"
+              name="clubDescription"
+              placeholder="Enter club description"
+              rows="5"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="clubLocation">Club Location:</label>
+            <input type="text" id="clubLocation" name="clubLocation" required />
+          </div>
+          <div class="form-group">
+            <label for="clubTimings">Club Timings:</label>
+            <input type="text" id="clubTimings" name="clubTimings" required />
+          </div>
+          <div>
+            <button class="submit-btn" type="submit">
+              <i class="animation"></i>Create Club<i class="animation"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <%- include("partials/footer") -%>
+
+    <script>
+      // Preview the selected banner image
+      document
+        .getElementById("banner-upload")
+        .addEventListener("change", function (event) {
+          const [file] = event.target.files;
+          if (file) {
+            document.getElementById("banner-preview").src =
+              URL.createObjectURL(file);
+          }
+        });
+
+      // Preview the selected profile image
+      document
+        .getElementById("profile-upload")
+        .addEventListener("change", function (event) {
+          const [file] = event.target.files;
+          if (file) {
+            document.getElementById("profile-preview").src =
+              URL.createObjectURL(file);
+          }
+        });
+    </script>
+  </body>
+</html>

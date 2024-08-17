@@ -1,0 +1,269 @@
+@import url("https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Dongle&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.clubDetails-banner {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+
+.clubDetails-banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.clubDetails-banner img {
+  width: 100vw;
+  height: 30vh;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  position: relative;
+}
+
+.clubDetails-profile-photo {
+  position: absolute;
+  top: 45%; /* Position the profile photo at the midpoint of the banner */
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the profile photo */
+  width: 20vw;
+  height: 20vw;
+  z-index: 2; /* Ensure the profile photo is above the banner */
+}
+
+.clubDetails-profile-photo img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 5px solid white; /* Optional: Add a white border around the image */
+  object-fit: cover;
+  object-position: center;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.clubDetails-content {
+  margin-top: 13vw;
+}
+.clubDetails-content h1 {
+  text-align: center;
+  font-size: 6vh;
+  margin-top: 0;
+  font-weight: 700 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+  color: #00adb5;
+  margin-bottom: 0;
+}
+.clubDetails-member-count {
+  display: flex;
+  justify-content: center;
+}
+.clubDetails-member-count p {
+  font-weight: 500 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+  font-size: 3vh;
+}
+.clubDetails-join-container {
+  display: flex;
+  justify-content: center;
+}
+.clubDetails-join-button {
+  display: inline-block;
+  transition: all 0.2s ease-in;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  color: #222831;
+  padding: 0.7em 1.7em;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 0.5em;
+  background: rgba(0, 173, 181, 0.5);
+  border: 1px solid #e8e8e8;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+  font-weight: 500 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+}
+
+.clubDetails-join-button:active {
+  color: #666;
+  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+}
+
+.clubDetails-join-button:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.25);
+  top: 100%;
+  width: 140%;
+  height: 180%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.clubDetails-join-button:after {
+  content: "";
+  position: absolute;
+  left: 55%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.45);
+  top: 180%;
+  width: 160%;
+  height: 190%;
+  background-color: #ffffff; /* Updated to light grey */
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.clubDetails-join-button:hover {
+  color: #000; /* Darker text color on hover for contrast */
+  border: 1px solid #ffffff; /* Border color matches background */
+}
+
+.clubDetails-join-button:hover:before {
+  top: -35%;
+  background-color: #ffffff; /* Light grey on hover */
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+.clubDetails-join-button:hover:after {
+  top: -45%;
+  background-color: #ffffff; /* Light grey on hover */
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+.clubDetails-content p {
+  margin-left: 5vw;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+  color: #393e46;
+  font-size: 3vh;
+}
+.clubDetails-content p strong {
+  font-weight: 600 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+  color: #00adb5;
+  font-size: 3vh;
+}
+.clubDetails-chat-container {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  background-color: #00adb5;
+  border-radius: 1vw;
+  margin-top: 5vh;
+}
+.clubDetails-chat-container h1 {
+  font-weight: 700 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+  color: #fff;
+  font-size: 4vh;
+}
+.clubDetails-chat-button {
+  display: inline-block;
+  transition: all 0.2s ease-in;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  color: #222831;
+  padding: 0.7em 1.7em;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 0.5em;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  font-weight: 500 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+  margin-bottom: 4vh;
+}
+
+.clubDetails-chat-button:active {
+  color: #666;
+  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+}
+
+.clubDetails-chat-button:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.25);
+  top: 100%;
+  width: 140%;
+  height: 180%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.clubDetails-chat-button:after {
+  content: "";
+  position: absolute;
+  left: 55%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.45);
+  top: 180%;
+  width: 160%;
+  height: 190%;
+  background-color: #393e46; /* Updated to light grey */
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.clubDetails-chat-button:hover {
+  color: #fff; /* Darker text color on hover for contrast */
+  border: 1px solid #393e46; /* Border color matches background */
+}
+
+.clubDetails-chat-button:hover:before {
+  top: -35%;
+  background-color: #393e46; /* Light grey on hover */
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+.clubDetails-chat-button:hover:after {
+  top: -45%;
+  background-color: #393e46; /* Light grey on hover */
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+.clubDetails-joined-button {
+  display: inline-block;
+  transition: all 0.2s ease-in;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  color: #222831;
+  padding: 0.7em 1.7em;
+  cursor: not-allowed;
+  font-size: 18px;
+  border-radius: 0.5em;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  font-weight: 500 !important;
+  font-family: "Poppins", system-ui;
+  font-style: normal;
+  margin-bottom: 4vh;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+}
+.clubDetails-chat-button[disabled] {
+  background-color: #ccc; /* Gray color to indicate disabled state */
+  cursor: not-allowed; /* Change cursor to indicate disabled state */
+  opacity: 0.7;
+}
