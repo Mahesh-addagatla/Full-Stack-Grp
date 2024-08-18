@@ -43,10 +43,13 @@ app.use(bodyParser.json()); // Add this line to parse JSON requests
 
 app.use(
   session({
-    secret: "securecommunity12456", // Replace with a strong secret key
-    resave: true,
+    secret: process.env.SESSION_SECRET || "securecommunity12456", // Replace with a strong secret key
+    resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }, // Set to true if using HTTPS
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // Set secure to true if using HTTPS in production
+      maxAge: 1000 * 60 * 60 * 24, // Session expiration time (e.g., 1 day)
+    },
   })
 );
 
