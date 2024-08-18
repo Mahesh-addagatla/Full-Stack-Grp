@@ -43,8 +43,8 @@ app.use(bodyParser.json()); // Add this line to parse JSON requests
 
 app.use(
   session({
-    secret: "yourSecretKey", // Replace with a strong secret key
-    resave: false,
+    secret: "securecommunity12456", // Replace with a strong secret key
+    resave: true,
     saveUninitialized: false,
     cookie: { secure: false }, // Set to true if using HTTPS
   })
