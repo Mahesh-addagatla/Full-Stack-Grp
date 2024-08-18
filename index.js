@@ -64,9 +64,12 @@ const upload = multer({ storage: storage });
 // Middleware to check if user is authenticated
 function isAuthenticated(req, res, next) {
   if (req.session.user) {
+    console.log("Hello user");
     return next();
   } else {
+    console.log("get lost");
     res.redirect("/signin");
+    
   }
 }
 
