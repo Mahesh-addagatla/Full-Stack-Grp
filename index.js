@@ -1,21 +1,21 @@
 require("dotenv").config(); // Add this line to load .env variables
 const express = require("express");
 const bodyParser = require("body-parser");
-const session = require("express-session");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 const { getStorage } = require("firebase-admin/storage");
 const { getAuth } = require("firebase-admin/auth");
 const { getDatabase } = require("firebase-admin/database");
-const admin = require("firebase-admin");
 
-// Use environment variables from .env
+// Initialize Firebase
 const firebaseConfig = {
   type: process.env.FIREBASE_TYPE,
   project_id: process.env.FIREBASE_PROJECT_ID,
   private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"), // Ensure the private key is correctly formatted
+  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
   client_email: process.env.FIREBASE_CLIENT_EMAIL,
   client_id: process.env.FIREBASE_CLIENT_ID,
   auth_uri: process.env.FIREBASE_AUTH_URI,
@@ -39,19 +39,21 @@ const app = express();
 const port = 3020; // Realtime Database
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json()); // Add this line to parse JSON requests
+app.use(bodyParser.json());
+app.use(cookieParser()); // Middleware for handling cookies
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "securecommunity12456", // Replace with a strong secret key
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === "production", // Set secure to true if using HTTPS in production
-      maxAge: 1000 * 60 * 60 * 24, // Session expiration time (e.g., 1 day)
-    },
-  })
-);
+const SECRET_KEY = process.env.JWT_SECRET || "your_jwt_secret_key1234"; // Replace with a strong secret key
+
+function authenticateToken(req, res, next) {
+  const token = req.cookies["auth-token"];
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+}
 
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
@@ -61,15 +63,6 @@ app.use(express.static(__dirname + "/public"));
 const storage = multer.memoryStorage(); // Use memory storage for file uploads
 const upload = multer({ storage: storage });
 
-// Middleware to check if user is authenticated
-function isAuthenticated(req, res, next) {
-  if (req.session.user) {
-    return next();
-  } else {
-    res.redirect("/signin");
-  }
-}
-
 // Routes
 
 // Home route
@@ -78,8 +71,8 @@ app.get("/", (req, res) => {
 });
 
 // Authenticated home route
-app.get("/home2", isAuthenticated, async (req, res) => {
-  const location = req.session.user.location;
+app.get("/home2", authenticateToken, async (req, res) => {
+  const location = req.user.location;
 
   try {
     const postsSnapshot = await db
@@ -93,7 +86,7 @@ app.get("/home2", isAuthenticated, async (req, res) => {
       ...doc.data(),
     }));
 
-    res.render("home2", { user: req.session.user, posts });
+    res.render("home2", { user: req.user, posts });
   } catch (error) {
     console.error("Error fetching posts:", error);
     res.status(500).send("Error fetching posts. Please try again later.");
@@ -105,7 +98,7 @@ app.get("/signup", (req, res) => {
   res.render("signup");
 });
 app.get("/about", (req, res) => {
-  res.render("about", { user: req.session.user });
+  res.render("about", { user: req.user });
 });
 
 app.post("/signupsubmit", async (req, res) => {
@@ -155,7 +148,6 @@ app.post("/signinsubmit", async (req, res) => {
   const password = req.body.password;
 
   try {
-    // Check if the user exists in Firebase Authentication
     const userRecord = await auth.getUserByEmail(email);
     const uid = userRecord.uid;
 
@@ -174,23 +166,25 @@ app.post("/signinsubmit", async (req, res) => {
     }
 
     if (!location) {
-      // If the user is not found in any city, inform them about the issue
       return res.status(400).send("You are not a registered user in any city.");
     }
 
-    // If the user exists in both Authentication and Firestore, create a session and redirect to home
-    req.session.user = {
-      uid: userRecord.uid,
-      name: userRecord.displayName,
-      email: userRecord.email,
-      location: location,
-    };
+    // Generate JWT token
+    const accessToken = jwt.sign(
+      { uid, name: userRecord.displayName, email: userRecord.email, location },
+      SECRET_KEY,
+      { expiresIn: "1d" }
+    );
+    res.cookie("auth-token", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24, // Token expiration time (e.g., 1 day)
+    });
 
     res.redirect("/home2");
   } catch (error) {
     console.error("Error signing in:", error);
 
-    // Handle specific Firebase Authentication errors
     if (error.code === "auth/user-not-found") {
       return res
         .status(400)
@@ -203,21 +197,21 @@ app.post("/signinsubmit", async (req, res) => {
   }
 });
 
-app.get("/compose", isAuthenticated, (req, res) => {
-  res.render("compose", { user: req.session.user.name });
+app.get("/compose", authenticateToken, (req, res) => {
+  res.render("compose", { user: req.user.name });
 });
 
 app.post(
   "/compose",
-  isAuthenticated,
+  authenticateToken,
   upload.single("image"),
   async (req, res) => {
     const title = req.body.blogtitle || "Untitled"; // Provide default title if not present
     const content = req.body.blogpost; // Ensure this field is properly populated
     const category = req.body.category || "Uncategorized"; // Provide a default value if category is undefined
-    const location = req.session.user.location; // Get location from session
-    const authorId = req.session.user.uid;
-    const authorName = req.session.user.name;
+    const location = req.user.location; // Get location from session
+    const authorId = req.user.uid;
+    const authorName = req.user.name;
     const image = req.file;
 
     if (!content) {
@@ -269,8 +263,8 @@ app.post(
   }
 );
 
-app.get("/post", isAuthenticated, async (req, res) => {
-  const location = req.session.user.location; // Get location from session
+app.get("/post", authenticateToken, async (req, res) => {
+  const location = req.user.location; // Get location from session
 
   try {
     // Query the posts from the user's location
@@ -287,7 +281,7 @@ app.get("/post", isAuthenticated, async (req, res) => {
     }));
 
     // Render the posts with the user's information
-    res.render("post", { posts, user: req.session.user });
+    res.render("post", { posts, user: req.user });
   } catch (error) {
     console.error("Error fetching posts:", error);
     res.status(500).send("Error fetching posts. Please try again later.");
@@ -295,12 +289,12 @@ app.get("/post", isAuthenticated, async (req, res) => {
 });
 
 // Route to render a specific post
-app.get("/post/:id", isAuthenticated, async (req, res) => {
+app.get("/post/:id", authenticateToken, async (req, res) => {
   const postId = req.params.id;
   try {
     const postDoc = await db
       .collection("Cities")
-      .doc(req.session.user.location)
+      .doc(req.user.location)
       .collection("UnityThread")
       .doc(postId)
       .get();
@@ -312,7 +306,7 @@ app.get("/post/:id", isAuthenticated, async (req, res) => {
     const post = postDoc.data();
     const voicesSnapshot = await db
       .collection("Cities")
-      .doc(req.session.user.location)
+      .doc(req.user.location)
       .collection("UnityThread")
       .doc(postId)
       .collection("NeighbourVoices")
@@ -324,7 +318,7 @@ app.get("/post/:id", isAuthenticated, async (req, res) => {
     res.render("postpage", {
       post: { id: postId, ...post, Time: formattedTime },
       voices,
-      user: req.session.user,
+      user: req.user,
     });
   } catch (error) {
     console.error("Error fetching post:", error);
@@ -333,11 +327,11 @@ app.get("/post/:id", isAuthenticated, async (req, res) => {
 });
 
 // Route to handle adding a new comment (voice) to a post
-app.post("/post/:id/NeighbourVoices", isAuthenticated, async (req, res) => {
+app.post("/post/:id/NeighbourVoices", authenticateToken, async (req, res) => {
   const postId = req.params.id;
-  const location = req.session.user.location;
-  const userId = req.session.user.uid;
-  const userName = req.session.user.name;
+  const location = req.user.location;
+  const userId = req.user.uid;
+  const userName = req.user.name;
   const voice = req.body.voice;
 
   if (!voice || voice.trim() === "") {
@@ -369,13 +363,13 @@ app.post("/post/:id/NeighbourVoices", isAuthenticated, async (req, res) => {
   }
 });
 
-app.get("/chat", isAuthenticated, (req, res) => {
-  res.render("chat", { user: req.session.user });
+app.get("/chat", authenticateToken, (req, res) => {
+  res.render("chat", { user: req.user });
 });
 
-app.post("/chat", isAuthenticated, async (req, res) => {
-  const location = req.session.user.location;
-  const userName = req.session.user.name;
+app.post("/chat", authenticateToken, async (req, res) => {
+  const location = req.user.location;
+  const userName = req.user.name;
   const message = req.body.message;
 
   if (!message || message.trim() === "") {
@@ -399,21 +393,24 @@ app.post("/chat", isAuthenticated, async (req, res) => {
 
 // Sign out route
 app.post("/signout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).send("Error signing out. Please try again later.");
-    }
-    res.redirect("/signin");
+  // Clear the auth token cookie
+  res.cookie("auth-token", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Set to true if using HTTPS
+    expires: new Date(0) // Set expiration to the past
   });
+
+  // Redirect to sign-in page
+  res.redirect("/signin");
 });
 
-app.get("/delete/:id", isAuthenticated, async (req, res) => {
+app.get("/delete/:id", authenticateToken, async (req, res) => {
   const postId = req.params.id;
   if (!postId) {
     return res.status(400).send("Invalid post ID");
   }
 
-  const location = req.session.user.location;
+  const location = req.user.location;
 
   try {
     const postRef = db
@@ -440,8 +437,8 @@ app.get("/share/:id", (req, res) => {
   res.redirect("/post/" + postId);
 });
 
-app.get("/clubs", isAuthenticated, async (req, res) => {
-  const location = req.session.user.location; // Get location from session
+app.get("/clubs", authenticateToken, async (req, res) => {
+  const location = req.user.location; // Get location from session
 
   try {
     // Query the clubs from the user's location
@@ -458,7 +455,7 @@ app.get("/clubs", isAuthenticated, async (req, res) => {
     }));
 
     // Render the clubs with the user's information
-    res.render("clubs", { clubs, user: req.session.user });
+    res.render("clubs", { clubs, user: req.user });
   } catch (error) {
     console.error("Error fetching clubs:", error);
     res.status(500).send("Error fetching clubs. Please try again later.");
@@ -466,10 +463,10 @@ app.get("/clubs", isAuthenticated, async (req, res) => {
 });
 
 // Route to display details of a specific club
-app.get("/clubs/:id", isAuthenticated, async (req, res) => {
+app.get("/clubs/:id", authenticateToken, async (req, res) => {
   const clubId = req.params.id; // Club document ID
-  const userId = req.session.user.uid; // User ID
-  const location = req.session.user.location; // Location from session
+  const userId = req.user.uid; // User ID
+  const location = req.user.location; // Location from session
 
   try {
     // Query the specific club by its ID
@@ -499,7 +496,7 @@ app.get("/clubs/:id", isAuthenticated, async (req, res) => {
     const club = { id: clubDoc.id, ...clubDoc.data() };
 
     // Pass the `hasJoined` status to the template
-    res.render("clubDetails", { club, user: req.session.user, hasJoined });
+    res.render("clubDetails", { club, user: req.user, hasJoined });
   } catch (error) {
     console.error("Error fetching club details:", error);
     res
@@ -508,10 +505,10 @@ app.get("/clubs/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-app.post("/clubs/join/:id", isAuthenticated, async (req, res) => {
+app.post("/clubs/join/:id", authenticateToken, async (req, res) => {
   const clubId = req.params.id;
-  const userId = req.session.user.uid;
-  const location = req.session.user.location; // Get location from session
+  const userId = req.user.uid;
+  const location = req.user.location; // Get location from session
 
   try {
     // Reference to the user's JoinedClubs collection
@@ -552,21 +549,21 @@ app.post("/clubs/join/:id", isAuthenticated, async (req, res) => {
 });
 
 // Route to display the form for creating a new club
-app.get("/createClub", isAuthenticated, (req, res) => {
-  res.render("createClub", { user: req.session.user });
+app.get("/createClub", authenticateToken, (req, res) => {
+  res.render("createClub", { user: req.user });
 });
 
 // Route to handle the form submission for creating a new club
 app.post(
   "/createClub",
-  isAuthenticated,
+  authenticateToken,
   upload.fields([
     { name: "clubBanner" },
     { name: "clubProfileImage", maxCount: 1 },
   ]),
   async (req, res) => {
     const { clubName, clubDescription, clubLocation, clubTimings } = req.body;
-    const location = req.session.user.location; // Use user's city
+    const location = req.user.location; // Use user's city
 
     // Check that the club profile image is provided
     if (!req.files || !req.files.clubProfileImage) {
@@ -617,9 +614,9 @@ app.post(
 );
 
 // Route to render club chat page
-app.get("/clubs/:id/chat", isAuthenticated, async (req, res) => {
+app.get("/clubs/:id/chat", authenticateToken, async (req, res) => {
   const clubId = req.params.id;
-  const location = req.session.user.location;
+  const location = req.user.location;
 
   try {
     // Fetch club details
@@ -652,7 +649,7 @@ app.get("/clubs/:id/chat", isAuthenticated, async (req, res) => {
     // Render the club chat page with messages
     res.render("clubChat", {
       club,
-      user: req.session.user,
+      user: req.user,
       messages: sortedMessages,
     });
   } catch (error) {
@@ -664,10 +661,10 @@ app.get("/clubs/:id/chat", isAuthenticated, async (req, res) => {
 });
 
 // Route to handle sending a message in the club chat
-app.post("/clubs/:id/chat", isAuthenticated, async (req, res) => {
+app.post("/clubs/:id/chat", authenticateToken, async (req, res) => {
   const clubId = req.params.id;
-  const location = req.session.user.location;
-  const userName = req.session.user.name;
+  const location = req.user.location;
+  const userName = req.user.name;
   const message = req.body.message;
 
   if (!message || message.trim() === "") {
