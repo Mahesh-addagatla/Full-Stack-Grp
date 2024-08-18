@@ -44,7 +44,7 @@ app.use(bodyParser.json()); // Add this line to parse JSON requests
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "securecommunity12456", // Replace with a strong secret key
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {
       secure: process.env.NODE_ENV === "production", // Set secure to true if using HTTPS in production
