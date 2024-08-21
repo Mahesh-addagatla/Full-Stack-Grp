@@ -73,8 +73,10 @@ app.get("/", (req, res) => {
 // Authenticated home route
 app.get("/home2", authenticateToken, async (req, res) => {
   const location = req.user.location;
+  const userId = req.user.uid;
 
   try {
+    // Fetch posts
     const postsSnapshot = await db
       .collection("Cities")
       .doc(location)
@@ -85,20 +87,36 @@ app.get("/home2", authenticateToken, async (req, res) => {
       id: doc.id,
       ...doc.data(),
     }));
+
+    // Fetch clubs
     const clubsSnapshot = await db.collection("Cities").doc(location).collection("Clubs").get();
 
-    // Map clubs data
-    const clubs = clubsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
+    // Check if the user has joined each club
+    const clubs = await Promise.all(clubsSnapshot.docs.map(async (doc) => {
+      const clubData = doc.data();
+      const joinedClubDoc = await db
+        .collection("Cities")
+        .doc(location)
+        .collection("Residents")
+        .doc(userId)
+        .collection("JoinedClubs")
+        .doc(doc.id)
+        .get();
+
+      return {
+        id: doc.id,
+        ...clubData,
+        hasJoined: joinedClubDoc.exists,
+      };
     }));
 
-    res.render("home2", { user: req.user, posts,clubs });
+    res.render("home2", { user: req.user, posts, clubs });
   } catch (error) {
-    console.error("Error fetching posts:", error);
-    res.status(500).send("Error fetching posts. Please try again later.");
+    console.error("Error fetching posts or clubs:", error);
+    res.status(500).send("Error fetching posts or clubs. Please try again later.");
   }
 });
+
 
 // Sign up route
 app.get("/signup", (req, res) => {
