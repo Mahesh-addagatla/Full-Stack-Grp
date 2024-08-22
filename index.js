@@ -85,8 +85,15 @@ app.get("/home2", authenticateToken, async (req, res) => {
       id: doc.id,
       ...doc.data(),
     }));
+    const clubsSnapshot = await db.collection("Cities").doc(location).collection("Clubs").get();
 
-    res.render("home2", { user: req.user, posts });
+    // Map clubs data
+    const clubs = clubsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    res.render("home2", { user: req.user, posts,clubs });
   } catch (error) {
     console.error("Error fetching posts:", error);
     res.status(500).send("Error fetching posts. Please try again later.");
