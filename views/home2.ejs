@@ -1,9 +1,9 @@
 <%- include("partials/header") -%>
 <link rel="stylesheet" href="css/home2.css" />
 <style>
-  body {
+  /* body {
     overflow: hidden;
-  }
+  } */
 </style>
 <div id="vanta">
   <!-- First Sectiom -->
@@ -23,10 +23,8 @@
   </div>
 </div>
 
-<!-- 
 
 <div class="post-container-home">
-  <h2 class="section-title-home">Latest Unity Threads of your Locality</h2>
   <div class="post-scroll-home">
     <% posts.forEach(function(post) { %>
       <div class="post-card-home">
@@ -41,7 +39,6 @@
   </div>
 </div>
 
-<div class="section-4-title"><h2>Connect with your Locality</h2></div>
 <div class="fourth-section" id="section4">
   <div class="right-container">
     <h1 class="general-discussions-h1">
@@ -64,7 +61,54 @@
     <h2 class="connect-home"><a href="/chat">Lets Connect</a></h2>
   </div>
   
-</div> -->
+</div>
+
+
+<div class="third-section-cards">
+  <% if (clubs.length > 0) { %>
+    <% clubs.slice(0, 4).forEach(function(club) { %>
+      <!-- Club Card -->
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front" style="background-image: url('<%= club.ClubProfileImage %>')">
+            <p class="title"><%= club.ClubName %></p>
+          </div>
+          <div class="flip-card-back">
+            <div class="club-actions">
+              <% if (club.hasJoined) { %>
+                <!-- If already joined, show "Open Club" button -->
+                <button onclick="window.location.href='/clubs/<%= club.id %>'" class="club-btn">
+                  Open Club
+                </button>
+              <% } else { %>
+                <!-- If not joined, show "Join Club" button -->
+                <form action="/clubs/join/<%= club.id %>" method="POST">
+                  <button type="submit" class="club-btn join-btn">Join Club</button>
+                </form>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+
+    <!-- Show More Button -->
+    <% if (clubs.length > 4) { %>
+      <div class="show-more">
+        <button onclick="window.location.href='/clubs'" class="show-more-btn">Show More Clubs</button>
+      </div>
+    <% } %>
+  <% } else { %>
+    <!-- No Clubs Available Message -->
+    <div class="no-clubs-message">
+      <h2>No clubs available in your locality.</h2>
+      <p>Check back later or create a new club to get started!</p>
+    </div>
+  <% } %>
+</div>
+
+
+
 
 <script>
   document
@@ -86,4 +130,4 @@
   });
 </script>
 
-<!-- <%- include("partials/footer") -%> -->
+<%- include("partials/footer") -%>

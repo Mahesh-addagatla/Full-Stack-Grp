@@ -191,10 +191,15 @@
   border: 1.5px solid #393e46;
   background-color:  #393e46;
 }
+.general-discussions-h1{
+  font-size: 3rem;
+  margin-right: 7rem;
+}
 
 
 
 /* Container for the posts */
+/* Post container with horizontal scrolling */
 .post-container-home {
   margin: 40px 0;
   padding: 0 20px;
@@ -210,32 +215,33 @@
   -ms-overflow-style: none;  /* For Internet Explorer and Edge */
 }
 
-.post-scroll::-webkit-scrollbar {
+/* Hide scrollbar for Webkit browsers */
+.post-scroll-home::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
 
 /* Post Card Container */
 .post-card-home {
-  width: 100%;
-  max-width: 22vw;
+  flex: 0 0 22vw; /* Flexbox item width */
   height: auto;
   background: rgba(255, 255, 255, 0.8); /* Slightly transparent background for a modern look */
   border-radius: 2vw;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Increased shadow for better depth */
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Combined transitions for better performance */
   overflow: hidden;
-  margin: 20px;
+  margin-right: 20px;
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.6); /* Softer border color */
   backdrop-filter: blur(6px); /* Ensures text remains readable over a background image */
 }
 
+/* Post card hover effect */
 .post-card-home:hover {
-  transform: scale(1.05);
+  transform: scale(1.025);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* Darker shadow on hover for a more pronounced effect */
 }
 
-/* Styling for post images */
+/* Post image styling */
 .post-image-home {
   width: 100%;
   height: 42vh;
@@ -245,16 +251,17 @@
   transition: transform 0.3s ease-in-out; /* Smooth zoom effect on hover */
 }
 
+/* Zoom effect on hover */
 .post-card-home:hover .post-image-home {
   transform: scale(1.05);
 }
 
-/* Container for the post content */
+/* Post content container */
 .post-content-home {
   padding: 20px; /* Increased padding for better content spacing */
 }
 
-/* Styling for post titles */
+/* Post title styling */
 .post-title-home {
   font-size: 20px; /* Slightly larger for better readability */
   font-weight: 700; /* Bolder for emphasis */
@@ -263,7 +270,7 @@
   line-height: 1.4; /* Improved line-height for readability */
 }
 
-/* Styling for post excerpt */
+/* Post excerpt styling */
 .post-excerpt-home {
   font-size: 15px; /* Slightly larger for readability */
   color: #555; /* Darker color for better contrast */
@@ -271,15 +278,199 @@
   line-height: 1.6;
 }
 
-/* Styling for the read more link */
-.post-container-home .post-card-home .post-content-home .post-link-home {
+/* Read more link styling */
+.post-link-home {
   text-decoration: none;
   font-weight: 600;
   color: #00adb5;
   transition: color 0.3s ease; /* Smooth transition on hover */
 }
 
-.post-container-home .post-card-home .post-content-home .post-link-home:hover {
+.post-link-home:hover {
   color: #007a80; /* Darker color on hover */
 }
 
+
+
+.third-section {
+  margin-top: 3rem;
+  margin-bottom: 6vh;
+}
+.find-clubs-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.find-clubs-h1 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  text-transform: capitalize;
+  font-size: 2.5rem;
+  margin-bottom: 0;
+}
+.find-clubs-p {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.5rem;
+  text-align: center;
+}
+.third-section-cards {
+  display: flex;
+  margin-right: 3%;
+}
+/* From Uiverse.io by joe-watson-sbf */
+
+.club-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.club-btn {
+  padding: 10px 20px;
+  background-color: #00adb5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.club-btn:hover {
+  background-color: #007c8a;
+}
+
+.join-btn {
+  background-color: #ff5722;
+}
+
+.join-btn:hover {
+  background-color: #e64a19;
+}
+
+.flip-card {
+  background-color: transparent;
+  width: 40vw;
+  height: 60vh;
+  perspective: 1000px;
+  font-family: sans-serif;
+  cursor: pointer;
+  margin: 3% 0 3% 3%;
+}
+
+.title {
+  font-size: 1.5em;
+  font-weight: 900;
+  text-align: center;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 2.5rem;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 1rem;
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+    0 100px 80px rgba(0, 0, 0, 0.12);
+}
+
+.flip-card-front {
+  background: url("/images/chess.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: white;
+}
+
+.flip-card-back {
+  background: url("/images/chess.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: white;
+  transform: rotateY(180deg);
+  position: relative;
+  overflow: hidden; /* Ensure the blur stays within the card bounds */
+}
+
+.flip-card-back::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 110%;
+  height: 110%;
+  background: inherit; /* Inherit the background image */
+  background-size: inherit;
+  background-repeat: inherit;
+  filter: blur(10px); /* Apply blur here */
+  z-index: 1; /* Ensure it is below the text content */
+  border-radius: inherit; /* Match the card's border radius */
+}
+
+.flip-card-back .title,
+.flip-card-back .title-desc {
+  position: relative;
+  z-index: 2; /* Ensure the text stays above the blurred background */
+}
+
+.title-desc {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 0 1.5rem;
+  z-index: 2;
+}
+
+.flip-card-front::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.3
+  ); /* Change this color and opacity as needed */
+  z-index: 1; /* Position this below the title text */
+  border-radius: 1rem; /* Match the border radius of the flip card */
+}
+
+.flip-card-front .title {
+  position: relative;
+  z-index: 2; /* Ensure the title is above the background layer */
+}
